@@ -1,0 +1,62 @@
+# Build e dependências
+bin/
+obj/
+out/
+dist/
+
+# VS Code
+.vscode/
+
+# Rider/JetBrains
+.idea/
+*.sln.iml
+
+# Configurações do usuário Visual Studio
+*.user
+*.suo
+*.sln.docstates
+
+# NuGet Packages
+*.nupkg
+packages/
+.nuget/
+*.snupkg
+
+# npm packages (se usar JS ou CSS externos)
+node_modules/
+
+# Bibliotecas baixadas via LibMan
+wwwroot/lib/
+
+# Arquivos de log
+*.log
+
+# Secrets e configs locais
+secrets.json
+.local.settings.json
+
+# Resultados de teste
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Backup, arquivos temporários, lixo de SO
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Entity Framework (só se usar migrations no client, raro, mas enfim)
+Migrations/
+
+# Outros arquivos locais
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+
+# Azure Pipelines
+.azure-pipelines/
+
+# Docker
+docker-compose.override.yml

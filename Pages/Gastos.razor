@@ -1,0 +1,52 @@
+@inject HttpClient Http
+@page "/gastos"
+
+<h3>Gastos</h3>
+
+@if (gastos == null)
+{
+    <p>Carregando...</p>
+}
+else if (gastos.Count == 0)
+{
+    <p>Nenhum gasto cadastrado.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var gasto in gastos)
+        {
+            <tr>
+                <td>@gasto.Data.ToShortDateString()</td>
+                <td>@gasto.Descricao</td>
+                <td>@gasto.Valor.ToString("C")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Gasto> gastos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Substitua a URL pela sua API real
+        gastos = await Http.GetFromJsonAsync<List<Gasto>>("https://localhost:5003/api/gastos");
+    }
+
+    public class Gasto
+    {
+        public DateTime Data { get; set; }
+        public string? Descricao { get; set; }
+        public decimal Valor { get; set; }
+    }
+}
