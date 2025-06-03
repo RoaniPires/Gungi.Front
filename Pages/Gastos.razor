@@ -1,33 +1,49 @@
-@inject HttpClient Http
+@using Gungi.Front.Services
 @page "/gastos"
+@inject GungiApiService ApiService
 
-<h3>Gastos</h3>
-
-@if (gastos == null)
+<h3>Gastos Detalhados</h3>
+@if (mensagemErro != null)
+{
+    <p style="color: red">@mensagemErro</p>
+}
+else if (gastos == null)
 {
     <p>Carregando...</p>
 }
-else if (gastos.Count == 0)
+else if (!gastos.Any())
 {
-    <p>Nenhum gasto cadastrado.</p>
+    <p>Nenhum gasto encontrado.</p>
 }
 else
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+            <th>Forma Pagamento</th>
+            <th>Status</th>
+            <th>Observação</th>
+        </tr>
         </thead>
         <tbody>
-        @foreach (var gasto in gastos)
+        @foreach (var g in gastos)
         {
             <tr>
-                <td>@gasto.Data.ToShortDateString()</td>
-                <td>@gasto.Descricao</td>
-                <td>@gasto.Valor.ToString("C")</td>
+                <td>@g.Id</td>
+                <td>@g.DataLancamento.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@g.Descricao</td>
+                <td>@g.Categoria</td>
+                <td>R$ @g.Valor</td>
+                <td>@g.FormaPagamento</td>
+                <td>
+                    @(g.StatusPagamento ? "Pago" : "Pendente")
+                </td>
+                <td>@g.Observacao</td>
             </tr>
         }
         </tbody>
@@ -35,18 +51,18 @@ else
 }
 
 @code {
-    List<Gasto> gastos = new();
+    List<Gungi.Front.Models.GastoDetalhadoDto> gastos = null;
+    string mensagemErro = null;
 
     protected override async Task OnInitializedAsync()
     {
-        // Substitua a URL pela sua API real
-        gastos = await Http.GetFromJsonAsync<List<Gasto>>("https://localhost:5003/api/gastos");
-    }
-
-    public class Gasto
-    {
-        public DateTime Data { get; set; }
-        public string? Descricao { get; set; }
-        public decimal Valor { get; set; }
+        try
+        {
+            gastos = await ApiService.GetGastosDetalhadosAsync();
+        }
+        catch (Exception ex)
+        {
+            mensagemErro = $"Erro ao buscar gastos: {ex.Message}";
+        }
     }
 }
